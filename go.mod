@@ -1,4 +1,4 @@
-module github.com/amazinsellers/amazon-sp-api-sdk-go
+module github.com/paezand/amazon-sp-api-sdk-go
 
 go 1.15
 
