@@ -5,13 +5,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/amazinsellers/amazon-sp-api-sdk-go/resources"
-	xj "github.com/basgys/goxml2json"
 	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
 	"regexp"
 	"time"
+
+	xj "github.com/basgys/goxml2json"
+	"github.com/paezand/amazon-sp-api-sdk-go/resources"
 )
 
 type AccessTokenResponse struct {
@@ -51,9 +52,9 @@ func NewSellingPartner(config *SellingPartnerConfig) (*SellingPartner, error) {
 
 func (o *SellingPartner) RefreshToken() error {
 	reqBody, _ := json.Marshal(map[string]string{
-		"grant_type": "refresh_token",
+		"grant_type":    "refresh_token",
 		"refresh_token": o.Config.RefreshToken,
-		"client_id": o.Credentials.AppClient.Id,
+		"client_id":     o.Credentials.AppClient.Id,
 		"client_secret": o.Credentials.AppClient.Secret,
 	})
 
@@ -102,9 +103,9 @@ type AssumeRoleResult struct {
 }
 
 type RoleCredentials struct {
-	AccessKeyId string
+	AccessKeyId     string
 	SecretAccessKey string
-	SessionToken string
+	SessionToken    string
 }
 
 type RefreshRoleErrorResponse struct {
@@ -112,7 +113,7 @@ type RefreshRoleErrorResponse struct {
 }
 
 type RefreshRoleError struct {
-	Code string
+	Code    string
 	Message string
 }
 
@@ -144,7 +145,7 @@ func (o APIResponseMapPayload) GetPayloadStr() (*string, error) {
 }
 
 type APIResponseArrayPayload struct {
-	Errors  []APIResponseError `json:"errors"`
+	Errors  []APIResponseError        `json:"errors"`
 	Payload []*map[string]interface{} `json:"payload"`
 }
 
@@ -231,8 +232,8 @@ func (o *SellingPartner) RefreshRoleCredentials() error {
 	if refreshRoleResponse.AssumeRoleResponse.AssumeRoleResult.Credentials.AccessKeyId != "" {
 		resCredentials := refreshRoleResponse.AssumeRoleResponse.AssumeRoleResult.Credentials
 		o.Config.RoleCredentials = &RoleCredentialsConfig{
-			Id: resCredentials.AccessKeyId,
-			Secret: resCredentials.SecretAccessKey,
+			Id:            resCredentials.AccessKeyId,
+			Secret:        resCredentials.SecretAccessKey,
 			SecurityToken: resCredentials.SessionToken,
 		}
 		return nil
@@ -276,7 +277,7 @@ func (o *SellingPartner) CallAPI(params resources.SellingPartnerParams) (*string
 	signer := NewSigner(o.Config.Region)
 
 	signedRequest, err := signer.SignAPIRequest(
-							o.AccessToken, *o.Config.RoleCredentials, params)
+		o.AccessToken, *o.Config.RoleCredentials, params)
 
 	if err != nil {
 		return nil, fmt.Errorf("cannot sign api request. Error: %s", err.Error())
